@@ -26,3 +26,18 @@ pipe.read(until = "\r\n\r\n")
 # Receive reponse body
 pipe.read()
 ```
+
+### Utilities
+
+```python
+import pwnbox
+
+# DWORD to Little Endian
+l = pwnbox.dtol(1234)
+
+# QWORD to Big Endian
+b = pwnbox.qtob(1234)
+
+# Little Endian to Integer
+i = pwnbox.ltoi("\x01\x02\x03\x04")
+```
