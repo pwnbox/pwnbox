@@ -14,6 +14,7 @@ In your python environment:
 import pwnbox
 
 # Open pipes
+# pipe = pwnbox.ProcessPipe("nc example.com 80")
 pipe = pwnbox.SocketPipe("example.com", 80)
 
 # Send request
