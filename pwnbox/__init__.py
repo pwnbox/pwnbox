@@ -1,1 +1,1 @@
-from pipe import Pipe, SocketPipe
+from pipe import Pipe, SocketPipe, ProcessPipe

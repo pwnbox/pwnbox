@@ -1,5 +1,7 @@
 import sys
 import socket
+import subprocess
+import shlex
 
 class Pipe(object):
     def __init__(self):
@@ -45,9 +47,8 @@ class Pipe(object):
         self.write(buf + "\n")
 
 class SocketPipe(Pipe):
-    def __init__(self, addr, port, **kwargs):
+    def __init__(self, addr = None, port = None, **kwargs):
         super(SocketPipe, self).__init__()
-
         if "socket" in kwargs:
             self.sock = kwargs["socket"]
         else:
@@ -61,3 +62,18 @@ class SocketPipe(Pipe):
         while self.writebuf:
             wrt = self.sock.send(self.writebuf)
             self.writebuf = self.writebuf[wrt:]
+
+class ProcessPipe(Pipe):
+    def __init__(self, cmd = None, **kwargs):
+        super(ProcessPipe, self).__init__()
+        if "popen" in kwargs:
+            self.popen = kwargs["popen"]
+        else:
+            self.popen = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+
+    def _read(self):
+        self.readbuf += self.popen.stdout.read()
+
+    def _write(self):
+        self.popen.stdin.write(self.writebuf)
+        self.popen.stdin.flush()
