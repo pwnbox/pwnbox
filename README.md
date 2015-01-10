@@ -1,5 +1,7 @@
 # pwnbox
 
+[![Build Status](https://travis-ci.org/protos37/pwnbox.svg?branch=master)](https://travis-ci.org/protos37/pwnbox)
+
 ## Installation
 
 In your python environment:
