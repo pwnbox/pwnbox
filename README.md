@@ -27,6 +27,9 @@ pipe.read(until = "\r\n\r\n")
 
 # Receive reponse body
 pipe.read()
+
+# Close pipe
+pipe.close()
 ```
 
 ### Utilities

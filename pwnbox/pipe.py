@@ -37,6 +37,9 @@ class Pipe(object):
         self._write()
         self.writelog(buf)
 
+    def close(self):
+        self._close()
+
     def readline(self, lines = 1):
         buf = ""
         for i in range(lines):
@@ -63,17 +66,23 @@ class SocketPipe(Pipe):
             wrt = self.sock.send(self.writebuf)
             self.writebuf = self.writebuf[wrt:]
 
+    def _close(self):
+        self.sock.close()
+
 class ProcessPipe(Pipe):
     def __init__(self, cmd = None, **kwargs):
         super(ProcessPipe, self).__init__()
         if "popen" in kwargs:
             self.popen = kwargs["popen"]
         else:
-            self.popen = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+            self.popen = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
 
     def _read(self):
-        self.readbuf += self.popen.stdout.read()
+        self.readbuf += self.popen.stdout.readline()
 
     def _write(self):
         self.popen.stdin.write(self.writebuf)
         self.popen.stdin.flush()
+
+    def _close(self):
+        self.popen.terminate()
