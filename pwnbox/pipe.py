@@ -58,6 +58,20 @@ class Pipe(object):
     def writeline(self, buf):
         self.write(buf + "\n")
 
+class StringPipe(Pipe):
+    def __init__(self, data):
+        super(StringPipe, self).__init__()
+        self.readbuf = data
+
+    def _read(self):
+        pass
+
+    def _write(self):
+        self.writebuf = ""
+
+    def _close(self):
+        pass
+
 class SocketPipe(Pipe):
     def __init__(self, addr = None, port = None, **kwargs):
         super(SocketPipe, self).__init__()
