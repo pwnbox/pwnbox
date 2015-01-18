@@ -21,5 +21,10 @@ class TestProcessPipe(unittest.TestCase):
         self.assertEqual("Hello World!", self.pipe.read(until = "rld!"))
         self.assertEqual("\n", self.pipe.read(until = "\n"))
 
+    def test_readbytes(self):
+        self.pipe.write("Hello World!\n")
+        self.assertEqual("Hello W", self.pipe.read(bytes = 7))
+        self.assertEqual("orld!", self.pipe.read(bytes = 5))
+
     def tearDown(self):
         self.pipe.close()

@@ -25,6 +25,15 @@ class Pipe(object):
             buf, tok, self.readbuf = self.readbuf.partition(kwargs["until"])
             buf += tok
             self.readlog(buf[log:])
+        elif "bytes" in kwargs:
+            log = 0
+            while len(self.readbuf) < int(kwargs["bytes"]):
+                self.readlog(self.readbuf[log:])
+                log = len(self.readbuf)
+                self._read()
+            buf = self.readbuf[:int(kwargs["bytes"])]
+            self.readbuf = self.readbuf[int(kwargs["bytes"]):]
+            self.readlog(buf[log:])
         else:
             if not self.readbuf:
                 self._read()
