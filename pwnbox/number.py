@@ -1,14 +1,18 @@
 def power(x, y, m = 0):
-    if y == 0:
-        return 1
-    z = power(x, y >> 1, m)
-    z = (z * z) % m if m else z * z
-    if y & 1:
-        z = (z * x) % m if m else z * x
-    return z
+    if y < 0 or m < 0:
+        raise ValueError
+    v = 1
+    while y:
+        if y & 1:
+            v = v * x if not m else (v * x) % m
+        y >>= 1
+        x = x * x if not m else (x * x) % m
+    return v
 
 def MillerRabin(n):
     MillerRabin.maxn = 3825123056546413051
+    if MillerRabin.maxn < n:
+        raise ValueError
     if n <= 1:
         return False
     a = [2, 3, 5, 7, 11, 13, 17, 19, 23]
