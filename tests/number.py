@@ -22,3 +22,17 @@ class TestPrime(unittest.TestCase):
         for i in xrange(10):
             x = random.randint(1, 1000000)
             self.assertEqual(number.MillerRabin(x), self.primetest(x))
+
+    def test_prange(self):
+        for i in xrange(10):
+            x = random.randint(1, 100000)
+            t = []
+            for i in xrange(x, x + 10):
+                if self.primetest(i):
+                    t.append(i)
+            self.assertEqual(list(number.prange(x, x + 10)), t)
+
+    def test_prime(self):
+        for i in xrange(10):
+            x = random.randint(1, 1000000)
+            self.assertEqual(number.prime(x), self.primetest(x))

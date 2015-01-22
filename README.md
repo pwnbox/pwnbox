@@ -46,6 +46,10 @@ print pwnbox.number.MillerRabin(179428398)
 
 print pwnbox.number.MillerRabin(179428399)
 # True
+
+for i in pwnbox.number.prange(100000, 100100):
+	print i,
+# 100003 100019 100043 100049 100057 100069
 ```
 
 ### Utilities
