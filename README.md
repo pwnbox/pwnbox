@@ -16,8 +16,9 @@ In your python environment:
 import pwnbox
 
 # Open pipes
-# pipe = pwnbox.ProcessPipe("nc example.com 80")
-pipe = pwnbox.SocketPipe("example.com", 80)
+# pipe = pwnbox.pipe.ProcessPipe("nc example.com 80")
+# pipe = pwnbox.pipe.StringPipe("HTTP/1.0 200 OK\r\n\r\nIt Works!")
+pipe = pwnbox.pipe.SocketPipe("example.com", 80)
 
 # Send request
 pipe.write("GET / HTTP/1.0\r\nHost: example.com\r\n\r\n")
@@ -38,11 +39,11 @@ pipe.close()
 import pwnbox
 
 # DWORD to Little Endian
-l = pwnbox.dtol(1234)
+l = pwnbox.utils.dtol(1234)
 
 # QWORD to Big Endian
-b = pwnbox.qtob(1234)
+b = pwnbox.utils.qtob(1234)
 
 # Little Endian to Integer
-i = pwnbox.ltoi("\x01\x02\x03\x04")
+i = pwnbox.utils.ltoi("\x01\x02\x03\x04")
 ```

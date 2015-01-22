@@ -1,9 +1,9 @@
 import unittest
-import pwnbox
+from pwnbox import pipe
 
 class TestStringPipe(unittest.TestCase):
     def setUp(self):
-        self.pipe = pwnbox.StringPipe("Hello World!\n")
+        self.pipe = pipe.StringPipe("Hello World!\n")
 
     def test_read(self):
         s = ""
@@ -27,7 +27,7 @@ class TestStringPipe(unittest.TestCase):
 
 class TestProcessPipe(unittest.TestCase):
     def setUp(self):
-        self.pipe = pwnbox.ProcessPipe("cat")
+        self.pipe = pipe.ProcessPipe("cat")
 
     def test_readwrite(self):
         self.pipe.write("Hello World!\n")
