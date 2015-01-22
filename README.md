@@ -33,6 +33,21 @@ pipe.read()
 pipe.close()
 ```
 
+### Number Theory
+
+```python
+import pwnbox
+
+print pwnbox.number.power(2, 20, 1000)
+# 576
+
+print pwnbox.number.MillerRabin(179428398)
+# False
+
+print pwnbox.number.MillerRabin(179428399)
+# True
+```
+
 ### Utilities
 
 ```python

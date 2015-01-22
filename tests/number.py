@@ -1,13 +1,13 @@
 import unittest
 import random
-from pwnbox import math
+from pwnbox import number
 
 class TestMath(unittest.TestCase):
     def test_power(self):
         for i in xrange(10):
             x, y, m = random.randint(1, 1000000), random.randint(1, 1000), random.randint(2, 1000000)
-            self.assertEqual(math.power(x, y), x ** y)
-            self.assertEqual(math.power(x, y, m), (x ** y) % m)
+            self.assertEqual(number.power(x, y), x ** y)
+            self.assertEqual(number.power(x, y, m), (x ** y) % m)
 
 class TestPrime(unittest.TestCase):
     def primetest(self, n):
@@ -21,4 +21,4 @@ class TestPrime(unittest.TestCase):
     def test_MillerRabin(self):
         for i in xrange(10):
             x = random.randint(1, 1000000)
-            self.assertEqual(math.MillerRabin(x), self.primetest(x))
+            self.assertEqual(number.MillerRabin(x), self.primetest(x))
