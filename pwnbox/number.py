@@ -77,3 +77,42 @@ def prime(n):
         return MillerRabin(n)
     else:
         return bool(list(prange(n, n + 1)))
+
+def gcd(a, b):
+    while a:
+        a, b = b % a, a
+    return b
+
+def egcd(a, b):
+    x, y, u, v = 0, 1, 1, 0
+    while a:
+        q, r = b // a, b % a
+        m, n = x - u * q, y - v * q
+        b, a, x, y, u, v = a, r, u, v, m, n
+    return b, x, y
+
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        return None
+    return x % m
+
+def ChineseRemainderTheorem(q, r):
+    m = zip(q, r)
+    n = len(m)
+    for i in xrange(n):
+        if m[i][1] <= 0:
+            raise ValueError
+        for j in xrange(i):
+            g = gcd(m[i][1], m[j][1])
+            x, y = m[i][1] / g, m[j][1] / g
+            m[i] = (m[i][0] % x, x)
+            m[j] = (m[j][0] % y, y)
+    c = 1
+    for i in xrange(n):
+        c *= m[i][1]
+    x = 0
+    for q, r in m:
+        a = q * modinv(c / r, r)
+        x += a * (c / r)
+    return x % c

@@ -20,12 +20,12 @@ class TestPrime(unittest.TestCase):
 
     def test_MillerRabin(self):
         for i in xrange(10):
-            x = random.randint(1, 1000000)
+            x = random.randint(1, 10 ** 6)
             self.assertEqual(number.MillerRabin(x), self.primetest(x))
 
     def test_prange(self):
         for i in xrange(10):
-            x = random.randint(1, 100000)
+            x = random.randint(1, 10 ** 5)
             t = []
             for i in xrange(x, x + 10):
                 if self.primetest(i):
@@ -34,5 +34,34 @@ class TestPrime(unittest.TestCase):
 
     def test_prime(self):
         for i in xrange(10):
-            x = random.randint(1, 1000000)
+            x = random.randint(1, 10 ** 6)
             self.assertEqual(number.prime(x), self.primetest(x))
+
+class TestModular(unittest.TestCase):
+    def test_gcd(self):
+        self.assertEqual(number.gcd(12, 18), 6)
+        self.assertEqual(number.gcd(36, 11), 1)
+        self.assertEqual(number.gcd(14, 7), 7)
+
+    def test_egcd(self):
+        for i in xrange(10):
+            x, y = random.randint(1, 10 ** 12), random.randint(1, 10 ** 12)
+            g, a, b = number.egcd(x, y)
+            self.assertEqual(x * a + y * b, g)
+
+    def test_modinv(self):
+        for i in xrange(10):
+            x = y = 0
+            while number.gcd(x, y) != 1:
+                x, y = random.randint(1, 10 ** 12), random.randint(1, 10 ** 12)
+            self.assertEqual((number.modinv(x, y) * x) % y, 1)
+
+    def test_ChineseRemainderTheorem(self):
+        for i in xrange(10):
+            n = random.randint(1, 10)
+            x = random.randint(1, 10 ** 12)
+            r = [random.randint(1, 10 ** 8) for i in xrange(n)]
+            q = [x % i for i in r]
+            y = number.ChineseRemainderTheorem(q, r)
+            for z, w in zip(q, r):
+                self.assertEqual(y % w, z)
