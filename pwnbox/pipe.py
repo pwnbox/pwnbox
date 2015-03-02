@@ -3,6 +3,8 @@ import socket
 import subprocess
 import shlex
 import telnetlib
+import os
+import select
 
 class Pipe(object):
     def __init__(self):
@@ -115,3 +117,22 @@ class ProcessPipe(Pipe):
 
     def _close(self):
         self.popen.terminate()
+
+    def interact(self):
+        termin = sys.stdin.fileno()
+        termout = sys.stdout.fileno()
+        childin = self.popen.stdin.fileno()
+        childout = self.popen.stdout.fileno()
+
+        while True:
+            r, w, e = select.select([termin, childout], [], [])
+            if childout in r:
+                data = os.read(childout, 4096)
+                if data == "":
+                    break
+                os.write(termout, data)
+            if termin in r:
+                data = os.read(termin, 4096)
+                while data != "":
+                    n = os.write(childin, data)
+                    data = data[n:]
