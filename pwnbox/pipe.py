@@ -2,6 +2,7 @@ import sys
 import socket
 import subprocess
 import shlex
+import telnetlib
 
 class Pipe(object):
     def __init__(self):
@@ -54,7 +55,7 @@ class Pipe(object):
         for i in range(lines):
             buf += self.read(until = "\n")
         return buf
-    
+
     def writeline(self, buf):
         self.write(buf + "\n")
 
@@ -91,6 +92,11 @@ class SocketPipe(Pipe):
 
     def _close(self):
         self.sock.close()
+
+    def interact(self):
+        tn = telnetlib.Telnet()
+        tn.sock = self.sock
+        tn.interact()
 
 class ProcessPipe(Pipe):
     def __init__(self, cmd = None, **kwargs):
