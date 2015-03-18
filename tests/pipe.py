@@ -25,16 +25,6 @@ class TestStringPipe(unittest.TestCase):
     def tearDown(self):
         self.pipe.close()
 
-class TestProcessPipe(unittest.TestCase):
+class TestProcessPipe(TestStringPipe):
     def setUp(self):
-        self.pipe = pipe.ProcessPipe("cat")
-
-    def test_readwrite(self):
-        self.pipe.write("Hello World!\n")
-        s = ""
-        while len(s) < len("Hello World!\n"):
-            s += self.pipe.read()
-        self.assertEqual("Hello World!\n", s)
-
-    def tearDown(self):
-        self.pipe.close()
+        self.pipe = pipe.ProcessPipe("echo \"Hello World!\"")

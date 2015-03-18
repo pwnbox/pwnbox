@@ -1,7 +1,9 @@
 import sys
+import os
 import socket
 import subprocess
 import shlex
+import fcntl
 
 class Pipe(object):
     def __init__(self):
@@ -98,10 +100,15 @@ class ProcessPipe(Pipe):
         if "popen" in kwargs:
             self.popen = kwargs["popen"]
         else:
-            self.popen = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+            self.popen = subprocess.Popen(shlex.split(cmd), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = False)
+        fcntl.fcntl(self.popen.stdout, fcntl.F_SETFL, fcntl.fcntl(self.popen.stdout, fcntl.F_GETFL) | os.O_NONBLOCK)
 
     def _read(self):
-        self.readbuf += self.popen.stdout.readline()
+        try:
+            self.readbuf += self.popen.stdout.read()
+        except IOError as e:
+            if e.errno != 35:
+                raise e
 
     def _write(self):
         self.popen.stdin.write(self.writebuf)
