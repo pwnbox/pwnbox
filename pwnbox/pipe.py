@@ -113,6 +113,7 @@ class ProcessPipe(Pipe):
     def _write(self):
         self.popen.stdin.write(self.writebuf)
         self.popen.stdin.flush()
+        self.writebuf = ""
 
     def _close(self):
         self.popen.terminate()
