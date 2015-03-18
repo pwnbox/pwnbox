@@ -56,7 +56,7 @@ class Pipe(object):
         for i in range(lines):
             buf += self.read(until = "\n")
         return buf
-    
+ 
     def writeline(self, buf):
         self.write(buf + "\n")
 
@@ -107,7 +107,7 @@ class ProcessPipe(Pipe):
         try:
             self.readbuf += self.popen.stdout.read()
         except IOError as e:
-            if e.errno != 35:
+            if e.strerror != "Resource temporarily unavailable":
                 raise e
 
     def _write(self):
