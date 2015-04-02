@@ -4,6 +4,9 @@ import socket
 import subprocess
 import shlex
 import fcntl
+import telnetlib
+import os
+import select
 
 class Pipe(object):
     def __init__(self):
@@ -60,6 +63,11 @@ class Pipe(object):
     def write_line(self, buf):
         self.write(buf + "\n")
 
+    def interact(self):
+        sys.stdout.write(self.readbuf)
+        self.readbuf = ""
+        self._interact()
+
     def close(self):
         self._close()
 
@@ -94,6 +102,11 @@ class SocketPipe(Pipe):
             wrt = self.sock.send(self.writebuf)
             self.writebuf = self.writebuf[wrt:]
 
+    def _interact(self):
+        tn = telnetlib.Telnet()
+        tn.sock = self.sock
+        tn.interact()
+
     def _close(self):
         self.sock.close()
 
@@ -117,6 +130,28 @@ class ProcessPipe(Pipe):
         self.popen.stdin.write(self.writebuf)
         self.popen.stdin.flush()
         self.writebuf = ""
+
+    def _interact(self):
+        termin = sys.stdin.fileno()
+        termout = sys.stdout.fileno()
+        childin = self.popen.stdin.fileno()
+        childout = self.popen.stdout.fileno()
+        while True:
+            r, w, e = select.select([termin, childout], [], [])
+            if childout in r:
+                data = os.read(childout, 4096)
+                if data == "":
+                    break
+                while data != "":
+                    n = os.write(termout, data)
+                    data = data[n:]
+            if termin in r:
+                data = os.read(termin, 4096)
+                if data == "":
+                    break
+                while data != "":
+                    n = os.write(childin, data)
+                    data = data[n:]
 
     def _close(self):
         self.popen.terminate()
