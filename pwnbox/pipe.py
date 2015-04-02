@@ -18,47 +18,50 @@ class Pipe(object):
         self.log.write("\033[01;34m" + buf + "\033[0m")
 
     def read(self, **kwargs):
-        if "until" in kwargs:
-            log = 0
-            while not kwargs["until"] in self.readbuf:
-                self.readlog(self.readbuf[log:])
-                log = len(self.readbuf)
-                self._read()
-            buf, tok, self.readbuf = self.readbuf.partition(kwargs["until"])
-            buf += tok
-            self.readlog(buf[log:])
-        elif "bytes" in kwargs:
-            log = 0
-            while len(self.readbuf) < int(kwargs["bytes"]):
-                self.readlog(self.readbuf[log:])
-                log = len(self.readbuf)
-                self._read()
-            buf = self.readbuf[:int(kwargs["bytes"])]
-            self.readbuf = self.readbuf[int(kwargs["bytes"]):]
-            self.readlog(buf[log:])
-        else:
-            if not self.readbuf:
-                self._read()
-            buf, self.readbuf = self.readbuf, ""
-            self.readlog(buf)
+        if not self.readbuf:
+            self._read()
+        buf, self.readbuf = self.readbuf, ""
+        self.readlog(buf)
+        return buf
+
+    def read_until(self, until):
+        log = 0
+        while not until in self.readbuf:
+            self.readlog(self.readbuf[log:])
+            log = len(self.readbuf)
+            self._read()
+        buf, tok, self.readbuf = self.readbuf.partition(until)
+        buf += tok
+        self.readlog(buf[log:])
+        return buf
+
+    def read_bytes(self, byte=1):
+        log = 0
+        while len(self.readbuf) < byte:
+            self.readlog(self.readbuf[log:])
+            log = len(self.readbuf)
+            self._read()
+        buf = self.readbuf[:byte]
+        self.readbuf = self.readbuf[byte:]
+        self.readlog(buf[log:])
+        return buf
+
+    def read_line(self, lines = 1):
+        buf = ""
+        for i in range(lines):
+            buf += self.read_until("\n")
         return buf
 
     def write(self, buf):
         self.writebuf += buf
         self._write()
         self.writelog(buf)
+ 
+    def write_line(self, buf):
+        self.write(buf + "\n")
 
     def close(self):
         self._close()
-
-    def readline(self, lines = 1):
-        buf = ""
-        for i in range(lines):
-            buf += self.read(until = "\n")
-        return buf
- 
-    def writeline(self, buf):
-        self.write(buf + "\n")
 
 class StringPipe(Pipe):
     def __init__(self, data):
@@ -107,7 +110,7 @@ class ProcessPipe(Pipe):
         try:
             self.readbuf += self.popen.stdout.read()
         except IOError as e:
-            if e.strerror != "Resource temporarily unavailable":
+            if e.strerror.lower() != "Resource temporarily unavailable".lower():
                 raise e
 
     def _write(self):

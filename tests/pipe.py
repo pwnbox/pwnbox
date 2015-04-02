@@ -11,16 +11,16 @@ class TestStringPipe(unittest.TestCase):
             s += self.pipe.read()
         self.assertEqual("Hello World!\n", s)
 
-    def test_readline(self):
-        self.assertEqual("Hello World!\n", self.pipe.readline())
+    def test_read_line(self):
+        self.assertEqual("Hello World!\n", self.pipe.read_line())
 
-    def test_readuntil(self):
-        self.assertEqual("Hello World!", self.pipe.read(until = "rld!"))
-        self.assertEqual("\n", self.pipe.read(until = "\n"))
+    def test_read_until(self):
+        self.assertEqual("Hello World!", self.pipe.read_until("rld!"))
+        self.assertEqual("\n", self.pipe.read_until("\n"))
 
-    def test_readbytes(self):
-        self.assertEqual("Hello W", self.pipe.read(bytes = 7))
-        self.assertEqual("orld!", self.pipe.read(bytes = 5))
+    def test_read_bytes(self):
+        self.assertEqual("Hello W", self.pipe.read_bytes(7))
+        self.assertEqual("orld!", self.pipe.read_bytes(5))
 
     def tearDown(self):
         self.pipe.close()

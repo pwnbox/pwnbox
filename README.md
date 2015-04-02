@@ -24,7 +24,7 @@ pipe = pwnbox.pipe.SocketPipe("example.com", 80)
 pipe.write("GET / HTTP/1.0\r\nHost: example.com\r\n\r\n")
 
 # Receive response header
-pipe.read(until = "\r\n\r\n")
+pipe.read_until("\r\n\r\n")
 
 # Receive reponse body
 pipe.read()
