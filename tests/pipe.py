@@ -3,7 +3,7 @@ from pwnbox import pipe
 
 class TestStringPipe(unittest.TestCase):
     def setUp(self):
-        self.pipe = pipe.StringPipe("Hello World!\n")
+        self.pipe = pipe.StringPipe("Hello World!\n", logging = False)
 
     def test_read(self):
         s = ""
@@ -27,4 +27,4 @@ class TestStringPipe(unittest.TestCase):
 
 class TestProcessPipe(TestStringPipe):
     def setUp(self):
-        self.pipe = pipe.ProcessPipe("echo \"Hello World!\"")
+        self.pipe = pipe.ProcessPipe("echo \"Hello World!\"", logging = False)

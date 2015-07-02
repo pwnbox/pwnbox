@@ -9,16 +9,19 @@ import os
 import select
 
 class Pipe(object):
-    def __init__(self):
+    def __init__(self, logging = True):
         self.readbuf = ""
         self.writebuf = ""
-        self.log = sys.stderr
+        self.logging = logging
+        self.stderr = sys.stderr
 
     def readlog(self, buf):
-        self.log.write("\033[01;32m" + buf + "\033[0m")
+        if self.logging:
+            self.stderr.write("\033[01;32m" + buf + "\033[0m")
 
     def writelog(self, buf):
-        self.log.write("\033[01;34m" + buf + "\033[0m")
+        if self.logging:
+            self.stderr.write("\033[01;34m" + buf + "\033[0m")
 
     def read(self, **kwargs):
         if not self.readbuf:
@@ -72,8 +75,11 @@ class Pipe(object):
         self._close()
 
 class StringPipe(Pipe):
-    def __init__(self, data):
-        super(StringPipe, self).__init__()
+    def __init__(self, data, **kwargs):
+        if "logging" in kwargs:
+            super(StringPipe, self).__init__(kwargs["logging"])
+        else:
+            super(StringPipe, self).__init__()
         self.readbuf = data
 
     def _read(self):
@@ -87,7 +93,10 @@ class StringPipe(Pipe):
 
 class SocketPipe(Pipe):
     def __init__(self, addr = None, port = None, **kwargs):
-        super(SocketPipe, self).__init__()
+        if "logging" in kwargs:
+            super(SocketPipe, self).__init__(kwargs["logging"])
+        else:
+            super(SocketPipe, self).__init__()
         if "socket" in kwargs:
             self.sock = kwargs["socket"]
         else:
@@ -112,7 +121,10 @@ class SocketPipe(Pipe):
 
 class ProcessPipe(Pipe):
     def __init__(self, cmd = None, **kwargs):
-        super(ProcessPipe, self).__init__()
+        if "logging" in kwargs:
+            super(ProcessPipe, self).__init__(kwargs["logging"])
+        else:
+            super(ProcessPipe, self).__init__()
         if "popen" in kwargs:
             self.popen = kwargs["popen"]
         else:
