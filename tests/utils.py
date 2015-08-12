@@ -19,3 +19,16 @@ class TestTos(unittest.TestCase):
 
     def test_btoi(self):
         self.assertEqual(utils.btoi("\x01\x23\x45\x67"), 0x01234567)
+
+class TestSoprs(unittest.TestCase):
+    def test_sand(self):
+        self.assertEqual(utils.sand(utils.dtol(0x12345678), utils.dtol(0xdeadbeef)), utils.dtol(0x12345678 & 0xdeadbeef))
+
+    def test_sor(self):
+        self.assertEqual(utils.sor(utils.dtol(0x12345678), utils.dtol(0xdeadbeef)), utils.dtol(0x12345678 | 0xdeadbeef))
+
+    def test_sxor(self):
+        self.assertEqual(utils.sxor(utils.dtol(0x12345678), utils.dtol(0xdeadbeef)), utils.dtol(0x12345678 ^ 0xdeadbeef))
+
+    def test_sinv(self):
+        self.assertEqual(utils.sinv(utils.dtol(0x12345678)), utils.dtol(0x12345678 ^ 0xffffffff))
