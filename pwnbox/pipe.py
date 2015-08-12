@@ -7,6 +7,7 @@ import fcntl
 import telnetlib
 import os
 import select
+import string
 
 class Pipe(object):
     def __init__(self, logging = True):
@@ -17,10 +18,12 @@ class Pipe(object):
 
     def readlog(self, buf):
         if self.logging:
+            buf = "".join(["\\x%02x" % ord(i) if i not in string.printable else i for i in buf])
             self.stderr.write("\033[01;32m" + buf + "\033[0m")
 
     def writelog(self, buf):
         if self.logging:
+            buf = "".join(["\\x%02x" % ord(i) if i not in string.printable else i for i in buf])
             self.stderr.write("\033[01;34m" + buf + "\033[0m")
 
     def read(self, size = 4096):
