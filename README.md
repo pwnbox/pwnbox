@@ -8,6 +8,10 @@ In your python environment:
 
 	pip install git+https://github.com/protos37/pwnbox
 
+To upgrade:
+
+	pip install --upgrade pwnbox
+
 ## Usage
 
 ### Piped communication
@@ -33,25 +37,6 @@ pipe.read()
 pipe.close()
 ```
 
-### Number Theory
-
-```python
-import pwnbox
-
-print pwnbox.number.power(2, 20, 1000)
-# 576
-
-print pwnbox.number.MillerRabin(179428398)
-# False
-
-print pwnbox.number.MillerRabin(179428399)
-# True
-
-for i in pwnbox.number.prange(100000, 100100):
-	print i,
-# 100003 100019 100043 100049 100057 100069
-```
-
 ### Utilities
 
 ```python
@@ -65,4 +50,8 @@ b = pwnbox.utils.qtob(1234)
 
 # Little Endian to Integer
 i = pwnbox.utils.ltoi("\x01\x02\x03\x04")
+
+# string operations
+a = pwnbox.utils.sand(pwnbox.utils.dtol(0x12345678), pwnbox.utils.dtol(0xffff0000))
+x = pwnbox.utils.sxor(pwnbox.utils.dtol(0xdeafbeef), pwnbox.utils.dtol(0x12345678))
 ```

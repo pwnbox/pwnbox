@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = "pwnbox",
-    version = "0.1",
+    version = "0.2",
     packages = ["pwnbox"],
     test_suite = "tests",
     author = "protos37",
