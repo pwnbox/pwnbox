@@ -23,10 +23,10 @@ class Pipe(object):
         if self.logging:
             self.stderr.write("\033[01;34m" + buf + "\033[0m")
 
-    def read(self, **kwargs):
+    def read(self, size = 4096):
         if not self.readbuf:
             self._read()
-        buf, self.readbuf = self.readbuf, ""
+        buf, self.readbuf = self.readbuf[:size], self.readbuf[size:]
         self.readlog(buf)
         return buf
 
@@ -41,7 +41,10 @@ class Pipe(object):
         self.readlog(buf[log:])
         return buf
 
-    def read_bytes(self, byte=1):
+    def read_some(self):
+        return self.read()
+
+    def read_byte(self, byte = 1):
         log = 0
         while len(self.readbuf) < byte:
             self.readlog(self.readbuf[log:])
@@ -52,9 +55,9 @@ class Pipe(object):
         self.readlog(buf[log:])
         return buf
 
-    def read_line(self, lines = 1):
+    def read_line(self, line = 1):
         buf = ""
-        for i in range(lines):
+        for i in range(line):
             buf += self.read_until("\n")
         return buf
 
