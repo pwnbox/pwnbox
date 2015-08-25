@@ -1,5 +1,19 @@
 language: python
 python:
-    - "2.6"
     - "2.7"
+env:
+    - GMPY2=
+    - GMPY2=gmpy2 LD_LIBRARY_PATH=/usr/local/lib
+before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get -qq install libgmp3-dev libmpfr-dev
+    - wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.2.tar.gz
+    - tar xzvf mpc-1.0.2.tar.gz
+    - pushd mpc-1.0.2
+    - ./configure
+    - make
+    - sudo make install
+    - popd
+install:
+    - pip install $GMPY2
 script: python setup.py test
