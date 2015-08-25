@@ -2,4 +2,12 @@ language: python
 python:
     - "2.6"
     - "2.7"
+env:
+    - GMPY2=
+    - GMPY2=gmpy2
+before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get -qq install libgmp3-dev libmpfr-dev libmpc-dev
+install:
+    - pip install -q $GMPY2
 script: python setup.py test
