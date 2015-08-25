@@ -3,7 +3,7 @@ python:
     - "2.7"
 env:
     - GMPY2=
-    - GMPY2=gmpy2
+    - GMPY2=gmpy2 LD_LIBRARY_PATH=/usr/local/lib
 before_install:
     - sudo apt-get -qq update
     - sudo apt-get -qq install libgmp3-dev libmpfr-dev
