@@ -10,6 +10,8 @@ import select
 import string
 
 class Pipe(object):
+    """Pipe is Pipe
+    """
     def __init__(self, logging = True):
         self.readbuf = ""
         self.writebuf = ""

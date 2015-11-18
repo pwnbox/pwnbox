@@ -1,7 +1,8 @@
 import unittest
 import imp
-import pwnbox
 import random
+from Crypto.Util.number import getPrime
+from pwnbox import number
 
 has_gmpy2 = False
 try:
@@ -9,24 +10,6 @@ try:
     has_gmpy2 = True
 except ImportError:
     pass
-
-from Crypto.Util.number import getPrime
-class TestImport(unittest.TestCase):
-    def test_has_gmpy2(self):
-        has_gmpy2 = False
-        try:
-            imp.find_module('gmpy2')
-            has_gmpy2 = True
-        except ImportError:
-            pass
-        if has_gmpy2:
-            try:
-                pwnbox.number
-            except AttributeError:
-                self.fail('pwnbox.number not imported with gmpy2')
-        else:
-            with self.assertRaises(AttributeError):
-                pwnbox.number
 
 @unittest.skipIf(has_gmpy2 == False, "gmpy2 not available")
 class TestNumber(unittest.TestCase):
@@ -44,7 +27,7 @@ class TestNumber(unittest.TestCase):
             remainders.append(v % mod)
             moduli.append(mod)
             lcm *= mod
-        res = pwnbox.number.crt(remainders, moduli)
+        res = number.crt(remainders, moduli)
         self.assertEqual(res, (v % lcm, lcm))
 
     def test_crt_without_coprime(self):
@@ -57,13 +40,13 @@ class TestNumber(unittest.TestCase):
             remainders.append(v % mod)
             moduli.append(mod)
         lcm = reduce(gmpy2.lcm, moduli)
-        res = pwnbox.number.crt(remainders, moduli, False)
+        res = number.crt(remainders, moduli, False)
         self.assertEqual(res, (v % lcm, lcm))
 
     def test_fermat_factoring(self):
         q = getPrime(512)
         p = gmpy2.next_prime(q + random.randint(1 << 64, 1 << 128))
-        self.assertEqual((p , q), pwnbox.number.fermat_factoring(p * q))
+        self.assertEqual((p , q), number.fermat_factoring(p * q))
 
     def test_wiener(self):
         q = gmpy2.mpz(getPrime(512))
@@ -76,4 +59,4 @@ class TestNumber(unittest.TestCase):
         while gmpy2.gcd(d, phi) != 1 :
             d -= 1
         e = gmpy2.invert(d , phi)
-        self.assertEqual((d, p, q), pwnbox.number.wiener_attack(n, e))
+        self.assertEqual((d, p, q), number.wiener_attack(n, e))

@@ -1,6 +1,12 @@
-import gmpy2
+has_gmpy2 = False
+try:
+    import gmpy2
+    has_gmpy2 = True
+except ImportError:
+    pass
 
 def crt(remainders, moduli, coprime = True):
+    assert(has_gmpy2)
     assert(len(remainders) == len(moduli))
     if not coprime:
         v, m = remainders[0], moduli[0]
@@ -23,6 +29,7 @@ def cf(n, m):
     """
     convert rational number n/m to continued fraction.
     """
+    assert(has_gmpy2)
     res = []
     while m:
         x = gmpy2.f_div(n, m)
@@ -34,6 +41,7 @@ def cf_convergents(cf):
     """
     convert continued fraction to convergents.
     """
+    assert(has_gmpy2)
     p_2, q_2 = gmpy2.mpz(0), gmpy2.mpz(1)
     p_1, q_1 = gmpy2.mpz(1), gmpy2.mpz(0)
     res = []
@@ -45,6 +53,7 @@ def cf_convergents(cf):
     return res
 
 def wiener_attack(N, e):
+    assert(has_gmpy2)
     convergents = cf_convergents(cf(e, N))
     for k,d in convergents:
         if k == 0 or (e * d - 1) % k != 0:
@@ -62,6 +71,7 @@ def wiener_attack(N, e):
     return None
 
 def fermat_factoring(N, trial = 1 << 32):
+    assert(has_gmpy2)
     x = gmpy2.isqrt(N) + 1
     y = x * x - N
     for i in xrange(trial):
