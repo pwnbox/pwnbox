@@ -1,3 +1,6 @@
+"""Number theory algorithms.
+"""
+
 has_gmpy2 = False
 try:
     import gmpy2
@@ -6,6 +9,12 @@ except ImportError:
     pass
 
 def crt(remainders, moduli, coprime = True):
+    """Chinese Remainder Theorem.
+
+    :param remainders: list of remainders.
+    :param moduli: list of modulies.
+    :param coprime: (optional) set ``False`` if modulies are not coprimes.
+    """
     assert(has_gmpy2)
     assert(len(remainders) == len(moduli))
     if not coprime:
@@ -26,8 +35,10 @@ def crt(remainders, moduli, coprime = True):
     return (v % p, p)
 
 def cf(n, m):
-    """
-    convert rational number n/m to continued fraction.
+    """Rational number ``n / m`` to continued fraction.
+
+    :param n: numerator.
+    :param m: denominator.
     """
     assert(has_gmpy2)
     res = []
@@ -38,8 +49,9 @@ def cf(n, m):
     return res
 
 def cf_convergents(cf):
-    """
-    convert continued fraction to convergents.
+    """Continued fraction to convergents
+
+    :param cf: continued fraction.
     """
     assert(has_gmpy2)
     p_2, q_2 = gmpy2.mpz(0), gmpy2.mpz(1)
@@ -53,6 +65,11 @@ def cf_convergents(cf):
     return res
 
 def wiener_attack(N, e):
+    """Perform Wiener's attack.
+
+    :param N: RSA public key N.
+    :param e: RSA public key e.
+    """
     assert(has_gmpy2)
     convergents = cf_convergents(cf(e, N))
     for k,d in convergents:
@@ -71,6 +88,11 @@ def wiener_attack(N, e):
     return None
 
 def fermat_factoring(N, trial = 1 << 32):
+    """Perform Fermat's factorization.
+
+    :param N: number to factorize.
+    :param trial: (optional) maximum trial number.
+    """
     assert(has_gmpy2)
     x = gmpy2.isqrt(N) + 1
     y = x * x - N
