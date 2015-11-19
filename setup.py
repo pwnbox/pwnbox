@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = "pwnbox",
-    version = "0.3",
+    version = "0.3.1",
     packages = ["pwnbox"],
     test_suite = "nose.collector",
     tests_require = ["nose", "pycrypto"],

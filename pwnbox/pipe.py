@@ -13,7 +13,7 @@ import select
 import string
 
 class Pipe(object):
-    """Base class of Pipe Objects.
+    """Base class of pipes.
     """
     def __init__(self, logging = True):
         self.readbuf = ""
@@ -193,6 +193,8 @@ class ProcessPipe(Pipe):
 
     :param cmd: command to execute.
     :type cmd: str
+    :param logging: (optional) set ``False`` to disable logging.
+    :type logging: bool
     """
     def __init__(self, cmd = None, **kwargs):
         if "logging" in kwargs:
