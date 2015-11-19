@@ -4,6 +4,9 @@ pwnbox
 .. image:: https://travis-ci.org/protos37/pwnbox.svg?branch=master
     :target: https://travis-ci.org/protos37/pwnbox
 
+.. image:: https://readthedocs.org/projects/pwnbox/badge/?version=latest
+    :target: http://pwnbox.readthedocs.org/en/latest/?badge=latest
+
 Python toolbox for hacking and problem solving
 
 Installation
@@ -65,3 +68,8 @@ Utilties:
     # string operations
     a = pwnbox.utils.sand(pwnbox.utils.dtol(0x12345678), pwnbox.utils.dtol(0xffff0000))
     x = pwnbox.utils.sxor(pwnbox.utils.dtol(0xdeafbeef), pwnbox.utils.dtol(0x12345678))
+
+Documentation
+=============
+
+Documentation is available at `https://pwnbox.readthedocs.org/`.
