@@ -1,4 +1,4 @@
-"""A General Purpose Pipe Interface.
+"""General purpose pipe interface.
 """
 
 import sys

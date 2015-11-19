@@ -1,3 +1,4 @@
+======
 pwnbox
 ======
 
@@ -72,4 +73,4 @@ Utilties:
 Documentation
 =============
 
-Documentation is available at `https://pwnbox.readthedocs.org/`.
+Documentation is available at `http://pwnbox.readthedocs.org/`.
