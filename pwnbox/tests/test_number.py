@@ -60,3 +60,12 @@ class TestNumber(unittest.TestCase):
             d -= 1
         e = gmpy2.invert(d , phi)
         self.assertEqual((d, p, q), number.wiener_attack(n, e))
+
+    def test_pollard_rho(self):
+        q = gmpy2.mpz(getPrime(512))
+        p = gmpy2.mpz(getPrime(20))
+        if p > q :
+            p , q = q , p
+        n = p * q
+        self.assertEqual((p, q), number.pollard_rho(n))
+

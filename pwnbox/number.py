@@ -104,3 +104,27 @@ def fermat_factoring(N, trial = 1 << 32):
         x += 1
     # Failed
     return None
+
+
+def g(x, n):
+    """Pollard's rho method helper"""
+    return (x**2 + 1) % n
+
+def pollard_rho(n):
+    """Pollard's rho method for small prime factor
+
+    :param N: RSA public key N.
+    """
+    assert(has_gmpy2)
+    x, y, d = 2, 2, 1
+    while d == 1:
+        x = g(x, n)
+        y = g(g(y, n), n)
+        d = gmpy2.gcd(x - y, n)
+
+    if d != n:
+        return d, n // d
+
+    # Failed
+    return None
+
