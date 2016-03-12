@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = "pwnbox",
     version = "0.4",
-    packages = ["pwnbox"],
+    packages = find_packages(),
     test_suite = "nose.collector",
     tests_require = ["nose", "pycrypto"],
     author = "Hyeonseop Lee",
