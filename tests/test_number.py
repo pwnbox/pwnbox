@@ -1,5 +1,4 @@
 import unittest
-import imp
 import random
 from Crypto.Util.number import getPrime
 from pwnbox import number

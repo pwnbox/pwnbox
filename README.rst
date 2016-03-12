@@ -28,16 +28,15 @@ To upgrade:
 Examples
 ========
 
-Piped communication:
+General purpose pipe interface:
 
 .. code-block:: python
 
     import pwnbox
 
     # Open pipes
-    # pipe = pwnbox.pipe.ProcessPipe("nc example.com 80")
-    # pipe = pwnbox.pipe.StringPipe("HTTP/1.0 200 OK\r\n\r\nIt Works!")
-    pipe = pwnbox.pipe.SocketPipe("example.com", 80)
+    # pipe = pwnbox.pipe.popen("nc example.com 80")
+    pipe = pwnbox.pipe.connect("example.com", 80)
 
     # Send request
     pipe.write("GET / HTTP/1.0\r\nHost: example.com\r\n\r\n")
@@ -45,11 +44,19 @@ Piped communication:
     # Receive response header
     pipe.read_until("\r\n\r\n")
 
-    # Receive reponse body
-    pipe.read()
+    # Interact with standard IO
+    pipe.interact()
 
     # Close pipe
     pipe.close()
+
+Number theory implementations:
+
+    - Chinese Remainder Theorem
+    - Weiner's attack
+    - Fermat's factorization
+    - Pollard's rho method
+
 
 Utilties:
 

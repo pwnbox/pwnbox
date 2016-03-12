@@ -1,6 +1,8 @@
 """Number theory algorithms.
 """
 
+from functools import wraps
+
 has_gmpy2 = False
 try:
     import gmpy2
@@ -8,6 +10,15 @@ try:
 except ImportError:
     pass
 
+def gmpy2_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not has_gmpy2:
+            raise ImportError("gmpy2 is required")
+        return func(*args, **kwargs)
+    return wrapper
+
+@gmpy2_required
 def crt(remainders, moduli, coprime = True):
     """Chinese Remainder Theorem.
 
@@ -15,8 +26,6 @@ def crt(remainders, moduli, coprime = True):
     :param moduli: list of modulies.
     :param coprime: (optional) set ``False`` if modulies are not coprimes.
     """
-    assert(has_gmpy2)
-    assert(len(remainders) == len(moduli))
     if not coprime:
         v, m = remainders[0], moduli[0]
         for u, n in zip(remainders, moduli)[1:]:
@@ -34,13 +43,13 @@ def crt(remainders, moduli, coprime = True):
         v += e * (u * s % m)
     return (v % p, p)
 
+@gmpy2_required
 def cf(n, m):
     """Rational number ``n / m`` to continued fraction.
 
     :param n: numerator.
     :param m: denominator.
     """
-    assert(has_gmpy2)
     res = []
     while m:
         x = gmpy2.f_div(n, m)
@@ -48,6 +57,7 @@ def cf(n, m):
         n, m = m, n - m * x
     return res
 
+@gmpy2_required
 def cf_convergents(cf):
     """Continued fraction to convergents
 
@@ -64,13 +74,13 @@ def cf_convergents(cf):
         res.append((p, q))
     return res
 
+@gmpy2_required
 def wiener_attack(N, e):
     """Perform Wiener's attack.
 
     :param N: RSA public key N.
     :param e: RSA public key e.
     """
-    assert(has_gmpy2)
     convergents = cf_convergents(cf(e, N))
     for k,d in convergents:
         if k == 0 or (e * d - 1) % k != 0:
@@ -87,13 +97,13 @@ def wiener_attack(N, e):
     # Failed
     return None
 
+@gmpy2_required
 def fermat_factoring(N, trial = 1 << 32):
     """Perform Fermat's factorization.
 
     :param N: number to factorize.
     :param trial: (optional) maximum trial number.
     """
-    assert(has_gmpy2)
     x = gmpy2.isqrt(N) + 1
     y = x * x - N
     for i in xrange(trial):
@@ -105,17 +115,15 @@ def fermat_factoring(N, trial = 1 << 32):
     # Failed
     return None
 
-
-def g(x, n):
-    """Pollard's rho method helper"""
-    return (x**2 + 1) % n
-
+@gmpy2_required
 def pollard_rho(n):
-    """Pollard's rho method for small prime factor
+    """Pollard's rho method for small prime factor.
 
-    :param N: RSA public key N.
+    :param N: number to factorize.
     """
-    assert(has_gmpy2)
+    def g(x, n):
+        return (x**2 + 1) % n
+
     x, y, d = 2, 2, 1
     while d == 1:
         x = g(x, n)
