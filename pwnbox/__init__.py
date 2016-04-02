@@ -1,6 +1,6 @@
 """Python toolbox for hacking and problem solving
 """
 
-import pipe
-import number
-import utils
+from . import pipe
+from . import number
+from . import utils

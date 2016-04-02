@@ -1,7 +1,7 @@
 import subprocess
 import shlex
 
-from basepipe import BasePipe
+from .basepipe import BasePipe
 
 class ProcessPipe(BasePipe):
     """A pipe with local process.
