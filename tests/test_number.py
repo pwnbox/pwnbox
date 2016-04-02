@@ -1,5 +1,6 @@
 import unittest
 import random
+from functools import reduce
 from Crypto.Util.number import getPrime
 from pwnbox import number
 

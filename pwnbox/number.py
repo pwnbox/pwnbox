@@ -1,7 +1,12 @@
 """Number theory algorithms.
 """
 
-from functools import wraps
+from functools import reduce, wraps
+
+try:
+    xrange
+except NameError:
+    xrange = range
 
 has_gmpy2 = False
 try:
@@ -27,25 +32,26 @@ def crt(remainders, moduli, coprime = True):
     :param coprime: (optional) set ``False`` if modulies are not coprimes.
     """
     if not coprime:
-        v, m = remainders[0], moduli[0]
-        for u, n in zip(remainders, moduli)[1:]:
+        iternums = iter(zip(remainders, moduli))
+        v, m = next(iternums)
+        for u, n in iternums:
             g, s, t = gmpy2.gcdext(m, n)
             assert(v % g == u%g)
-            v += s * m / g * (u - v)
-            m *= n / g
+            v += s * m // g * (u - v)
+            m *= n // g
         return (v % m, m)
 
     p = reduce(lambda x, y : x * y, moduli)
     v = 0
     for u, m in zip(remainders, moduli):
-        e = p / m
+        e = p // m
         g, s, t = gmpy2.gcdext(e, m)
         v += e * (u * s % m)
     return (v % p, p)
 
 @gmpy2_required
 def cf(n, m):
-    """Rational number ``n / m`` to continued fraction.
+    """Rational number ``n // m`` to continued fraction.
 
     :param n: numerator.
     :param m: denominator.
@@ -85,7 +91,7 @@ def wiener_attack(N, e):
     for k,d in convergents:
         if k == 0 or (e * d - 1) % k != 0:
             continue
-        phi = (e * d - 1) / k
+        phi = (e * d - 1) // k
         c = N - phi + 1
         # now p,q can be the root of x**2 - s*x + n = 0
         det = c * c - 4 * N
@@ -93,7 +99,7 @@ def wiener_attack(N, e):
             continue
         s, r = gmpy2.isqrt_rem(det)
         if r == 0 and gmpy2.is_even(c + s):
-            return (d, (c + s) / 2,(c - s) / 2)
+            return (d, (c + s) // 2,(c - s) // 2)
     # Failed
     return None
 
