@@ -1,6 +1,7 @@
 language: python
 python:
     - "2.7"
+    - "3.5"
 env:
     - GMPY2=
     - GMPY2=gmpy2 LD_LIBRARY_PATH=/usr/local/lib

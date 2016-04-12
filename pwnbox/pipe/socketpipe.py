@@ -1,6 +1,6 @@
 import socket
 
-from basepipe import BasePipe
+from .basepipe import BasePipe
 
 class SocketPipe(BasePipe):
     """A pipe with a TCP connection.

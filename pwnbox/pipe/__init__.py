@@ -20,7 +20,7 @@
 
 """
 
-from basepipe import BasePipe
-from socketpipe import SocketPipe, connect
-from processpipe import ProcessPipe, popen
-from pipe import Pipe, pipe
+from .basepipe import BasePipe
+from .socketpipe import SocketPipe, connect
+from .processpipe import ProcessPipe, popen
+from .pipe import Pipe, pipe

@@ -1,6 +1,6 @@
 import os
 
-from basepipe import BasePipe
+from .basepipe import BasePipe
 
 class Pipe(BasePipe):
     """An echo pipe with ``os.pipe()``.

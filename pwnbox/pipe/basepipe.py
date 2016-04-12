@@ -4,6 +4,11 @@ import string
 import select
 from functools import wraps
 
+try:
+    xrange
+except NameError:
+    xrange = range
+
 STDIN = object()
 STDOUT = object()
 STDERR = object()
@@ -58,13 +63,13 @@ class BasePipe(object):
         rfds = []
         while not self._file_out in rfds:
             rfds, _, _ = select.select([self._file_out], [], [])
-        self._buffer_out += os.read(self._file_out, 4096)
+        self._buffer_out += os.read(self._file_out, 4096).decode('latin1')
 
     def _write(self):
         wfds = []
         while not self._file_in in wfds:
             _, wfds, _ = select.select([], [self._file_in], [])
-        size = os.write(self._file_in, self._buffer_in)
+        size = os.write(self._file_in, self._buffer_in.encode('latin1'))
         self._buffer_in = self._buffer_in[size:]
 
     def _flush(self):
@@ -187,26 +192,26 @@ class BasePipe(object):
                 wfds.append(stdout)
             rfds, wfds, _ = select.select(rfds, wfds, [])
             if stdin in rfds:
-                data = os.read(stdin, 4096)
+                data = os.read(stdin, 4096).decode('latin1')
                 if data == "":
                     break
                 self._buffer_in += data
             if self._file_out in rfds:
-                data = os.read(self._file_out, 4096)
+                data = os.read(self._file_out, 4096).decode('latin1')
                 if data == "":
                     break
                 self._buffer_out += data
             if stdout in wfds:
-                size = os.write(stdout, self._buffer_out)
+                size = os.write(stdout, self._buffer_out.encode('latin1'))
                 self._buffer_out = self._buffer_out[size:]
             if self._file_in in wfds:
-                size = os.write(self._file_in, self._buffer_in)
+                size = os.write(self._file_in, self._buffer_in.encode('latin1'))
                 self._buffer_in = self._buffer_in[size:]
 
         while self._buffer_out:
             _, wfds, _ = select.select([], [stdout], [])
             if stdout in wfds:
-                size = os.write(stdout, self._buffer_out)
+                size = os.write(stdout, self._buffer_out.encode('latin1'))
                 self._buffer_out = self._buffer_out[size:]
 
         os.close(stdin)

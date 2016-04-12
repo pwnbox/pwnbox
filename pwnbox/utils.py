@@ -2,40 +2,46 @@
 """
 
 import operator
+import codecs
+
+try:
+    xrange
+except NameError:
+    xrange = range
 
 def dtol(num):
     """Integer to DWORD in little endian.
     """
-    return ("%08x" % (num & 0xFFFFFFFF)).decode("hex")[::-1]
+    return codecs.decode("%08x" % (num & 0xFFFFFFFF), "hex")[::-1]
 
 def dtob(num):
     """Integer to DWORD in big endian.
     """
-    return ("%08x" % (num & 0xFFFFFFFF)).decode("hex")
+    return codecs.decode("%08x" % (num & 0xFFFFFFFF), "hex")
 
 def qtol(num):
     """Integer to QWORD in little endian.
     """
-    return ("%016x" % (num & 0xFFFFFFFFFFFFFFFF)).decode("hex")[::-1]
+    return codecs.decode("%016x" % (num & 0xFFFFFFFFFFFFFFFF), "hex")[::-1]
 
 def qtob(num):
     """Integer to QWORD in big endian.
     """
-    return ("%016x" % (num & 0xFFFFFFFFFFFFFFFF)).decode("hex")
+    return codecs.decode("%016x" % (num & 0xFFFFFFFFFFFFFFFF), "hex")
 
 def ltoi(mem):
     """Little endian bytes to integer.
     """
-    return int(mem[::-1].encode("hex"), 16)
+    return int(codecs.encode(mem[::-1].encode("latin1"), "hex"), 16)
 
 def btoi(mem):
     """Big endian bytes to integer.
     """
-    return int(mem.encode("hex"), 16)
+    return int(codecs.encode(mem.encode("latin1"), "hex"), 16)
 
 def sopr(a, b, f):
     t = max(len(a), len(b))
-    return "".join([chr(f(ord(a.ljust(t, "\x00")[i]), ord(b.ljust(t, "\x00")[i]))) for i in xrange(t)])
+    return bytes(bytearray([f(ord(a.ljust(t, b"\x00")[i:i + 1]), ord(b.ljust(t, b"\x00")[i:i + 1])) for i in xrange(t)]))
 
 def sand(a, b):
     """Bitwise and operator on string.
@@ -55,4 +61,4 @@ def sxor(a, b):
 def sinv(a):
     """Bitwise inverse operator on string.
     """
-    return "".join([chr(ord(i) ^ 0xff) for i in a])
+    return bytes(bytearray([ord(a[i:i + 1]) ^ 0xff for i in xrange(len(a))]))
