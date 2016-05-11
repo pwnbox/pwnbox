@@ -3,6 +3,7 @@
 
 import operator
 import codecs
+import six
 
 try:
     xrange
@@ -32,12 +33,12 @@ def qtob(num):
 def ltoi(mem):
     """Little endian bytes to integer.
     """
-    return int(codecs.encode(mem[::-1].encode("latin1"), "hex"), 16)
+    return int(codecs.encode(six.b(mem[::-1]), "hex"), 16)
 
 def btoi(mem):
     """Big endian bytes to integer.
     """
-    return int(codecs.encode(mem.encode("latin1"), "hex"), 16)
+    return int(codecs.encode(six.b(mem), "hex"), 16)
 
 def sopr(a, b, f):
     t = max(len(a), len(b))

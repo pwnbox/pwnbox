@@ -4,6 +4,7 @@ setup(
     name = "pwnbox",
     version = "0.4",
     packages = find_packages(),
+    install_requires = ['six'],
     test_suite = "nose.collector",
     tests_require = ["nose", "pycrypto"],
     author = "Hyeonseop Lee",
