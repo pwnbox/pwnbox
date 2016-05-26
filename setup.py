@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "pwnbox",
-    version = "0.4",
+    version = "0.4.1",
     packages = find_packages(),
     install_requires = ['six'],
     test_suite = "nose.collector",
