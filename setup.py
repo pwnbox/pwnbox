@@ -4,6 +4,7 @@ setup(
     name = "pwnbox",
     version = "0.4.1",
     packages = find_packages(),
+    setup_requires = ['sphinx'],
     install_requires = ['six'],
     test_suite = "nose.collector",
     tests_require = ["nose", "pycrypto"],

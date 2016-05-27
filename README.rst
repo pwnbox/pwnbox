@@ -2,8 +2,8 @@
 pwnbox
 ======
 
-.. image:: https://travis-ci.org/protos37/pwnbox.svg?branch=master
-    :target: https://travis-ci.org/protos37/pwnbox
+.. image:: https://travis-ci.org/pwnbox/pwnbox.svg?branch=master
+    :target: https://travis-ci.org/pwnbox/pwnbox
 
 .. image:: https://readthedocs.org/projects/pwnbox/badge/?version=latest
     :target: http://pwnbox.readthedocs.org/en/latest/?badge=latest
@@ -13,11 +13,18 @@ Python toolbox for hacking and problem solving
 Installation
 ============
 
+In order to use `pwnbox.number`, gmpy2 should be installed.
+
+.. code-block:: bash
+
+  brew install libmpc
+  pip install gmpy2
+
 In your python environment:
 
 .. code-block:: bash
 
-	pip install git+https://github.com/protos37/pwnbox
+	pip install git+https://github.com/pwnbox/pwnbox
 
 To upgrade:
 
@@ -52,32 +59,32 @@ General purpose pipe interface:
 
 Number theory implementations:
 
-    - Chinese Remainder Theorem
-    - Weiner's attack
-    - Fermat's factorization
-    - Pollard's rho method
+- Chinese Remainder Theorem
+- Weiner's attack
+- Fermat's factorization
+- Pollard's rho method
 
 
 Utilties:
 
 .. code-block:: python
 
-    import pwnbox
+    from pwnbox.utils import *
 
     # DWORD to Little Endian
-    l = pwnbox.utils.dtol(1234)
+    l = dtol(1234)
 
     # QWORD to Big Endian
-    b = pwnbox.utils.qtob(1234)
+    b = qtob(1234)
 
     # Little Endian to Integer
-    i = pwnbox.utils.ltoi("\x01\x02\x03\x04")
+    i = ltoi("\x01\x02\x03\x04")
 
     # string operations
-    a = pwnbox.utils.sand(pwnbox.utils.dtol(0x12345678), pwnbox.utils.dtol(0xffff0000))
-    x = pwnbox.utils.sxor(pwnbox.utils.dtol(0xdeafbeef), pwnbox.utils.dtol(0x12345678))
+    a = sand(dtol(0x12345678), dtol(0xffff0000))
+    x = sxor(dtol(0xdeafbeef), dtol(0x12345678))
 
 Documentation
 =============
 
-Documentation is available at `http://pwnbox.readthedocs.org/`.
+Documents are available at `http://pwnbox.readthedocs.org/`.
