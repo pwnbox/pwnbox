@@ -20,3 +20,4 @@ install:
   - pip install gmpy2
 script:
   - python setup.py test
+  - python setup.py build_sphinx
