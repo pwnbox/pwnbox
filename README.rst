@@ -46,10 +46,10 @@ General purpose pipe interface:
     pipe = pwnbox.pipe.connect("example.com", 80)
 
     # Send request
-    pipe.write("GET / HTTP/1.0\r\nHost: example.com\r\n\r\n")
+    pipe.write(b"GET / HTTP/1.0\r\nHost: example.com\r\n\r\n")
 
     # Receive response header
-    pipe.read_until("\r\n\r\n")
+    pipe.read_until(b"\r\n\r\n")
 
     # Interact with standard IO
     pipe.interact()
@@ -78,7 +78,7 @@ Utilties:
     b = qtob(1234)
 
     # Little Endian to Integer
-    i = ltoi("\x01\x02\x03\x04")
+    i = ltoi(b"\x01\x02\x03\x04")
 
     # string operations
     a = sand(dtol(0x12345678), dtol(0xffff0000))
