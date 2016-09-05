@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "pwnbox",
-    version = "0.4.1",
+    version = "0.5pre1",
     packages = find_packages(),
     setup_requires = ['sphinx'],
     install_requires = ['six'],

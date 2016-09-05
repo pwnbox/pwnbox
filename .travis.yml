@@ -1,20 +1,23 @@
 language: python
 python:
-    - "2.7"
-    - "3.5"
-env:
-    - GMPY2=
-    - GMPY2=gmpy2 LD_LIBRARY_PATH=/usr/local/lib
+  - "2.7"
+  - "3.5"
+addons:
+  apt:
+    packages:
+    - libgmp-dev
+    - libmpfr-dev
 before_install:
-    - sudo apt-get -qq update
-    - sudo apt-get -qq install libgmp3-dev libmpfr-dev
-    - wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.2.tar.gz
-    - tar xzvf mpc-1.0.2.tar.gz
-    - pushd mpc-1.0.2
-    - ./configure
-    - make
-    - sudo make install
-    - popd
+  - wget ftp://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz
+  - tar xzvf mpc-1.0.3.tar.gz
+  - pushd mpc-1.0.3
+  - ./configure
+  - make
+  - sudo make install
+  - popd
+  - export LD_LIBRARY_PATH=/usr/local/lib
 install:
-    - pip install $GMPY2
-script: python setup.py test
+  - pip install gmpy2
+script:
+  - python setup.py test
+  - python setup.py build_sphinx

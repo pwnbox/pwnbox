@@ -19,12 +19,12 @@ class TestTos(unittest.TestCase):
         self.assertEqual(utils.qtob(0x0123456789abcdff), b"\x01\x23\x45\x67\x89\xab\xcd\xff")
 
     def test_ltoi(self):
-        self.assertEqual(utils.ltoi("\x67\x45\x23\x01"), 0x01234567)
-        self.assertEqual(utils.ltoi("\xff\x45\x23\x01"), 0x012345ff)
+        self.assertEqual(utils.ltoi(b"\x67\x45\x23\x01"), 0x01234567)
+        self.assertEqual(utils.ltoi(b"\xff\x45\x23\x01"), 0x012345ff)
 
     def test_btoi(self):
-        self.assertEqual(utils.btoi("\x01\x23\x45\x67"), 0x01234567)
-        self.assertEqual(utils.btoi("\x01\x23\x45\xff"), 0x012345ff)
+        self.assertEqual(utils.btoi(b"\x01\x23\x45\x67"), 0x01234567)
+        self.assertEqual(utils.btoi(b"\x01\x23\x45\xff"), 0x012345ff)
 
 class TestSoprs(unittest.TestCase):
     def test_sand(self):

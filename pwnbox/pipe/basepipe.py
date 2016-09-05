@@ -3,11 +3,7 @@ import sys
 import string
 import select
 from functools import wraps
-
-try:
-    xrange
-except NameError:
-    xrange = range
+from six.moves import range
 
 STDIN = object()
 STDOUT = object()
@@ -27,7 +23,7 @@ def fdopen(fd, mode, buffering=0):
     return os.dup(fd)
 
 def printable(data):
-    return "".join(["\\x%02x" % ord(i) if i not in string.printable else i for i in data])
+    return "".join(["\\x%02x" % ord(i) if i not in string.printable else i for i in data.decode("latin1")])
 
 class BasePipe(object):
     """BasePipe(log_to=stderr, logging=True)
@@ -39,10 +35,10 @@ class BasePipe(object):
     :type logging: bool
     """
     def __init__(self, file_in, file_out, log_to=STDERR, logging=True):
-        self._file_in = fdopen(file_in, 'wb')
-        self._file_out = fdopen(file_out, 'rb')
-        self._buffer_in = ""
-        self._buffer_out = ""
+        self._file_in = fdopen(file_in, "wb")
+        self._file_out = fdopen(file_out, "rb")
+        self._buffer_in = b""
+        self._buffer_out = b""
         if log_to == STDERR:
             self._log_to = sys.stderr
         elif not logging:
@@ -63,13 +59,13 @@ class BasePipe(object):
         rfds = []
         while not self._file_out in rfds:
             rfds, _, _ = select.select([self._file_out], [], [])
-        self._buffer_out += os.read(self._file_out, 4096).decode('latin1')
+        self._buffer_out += os.read(self._file_out, 4096)
 
     def _write(self):
         wfds = []
         while not self._file_in in wfds:
             _, wfds, _ = select.select([], [self._file_in], [])
-        size = os.write(self._file_in, self._buffer_in.encode('latin1'))
+        size = os.write(self._file_in, self._buffer_in)
         self._buffer_in = self._buffer_in[size:]
 
     def _flush(self):
@@ -87,7 +83,7 @@ class BasePipe(object):
 
         :param size: (optional) maximum size of data in bytes to read.
         :type size: int
-        :return: data read from pipe.
+        :return: byte string read from pipe.
         """
         while not self._buffer_out:
             self._read()
@@ -99,9 +95,9 @@ class BasePipe(object):
     def read_until(self, until):
         """Read until ``until`` appears in pipe. Function blocks until ``until`` appears in available data.
 
-        :param until: string to read until.
-        :type until: str
-        :return: data read from pipe ends with ``until``.
+        :param until: byte string to read until.
+        :type until: bytes
+        :return: byte string read from pipe ends with ``until``.
         """
         logged = 0
         while not until in self._buffer_out:
@@ -117,7 +113,7 @@ class BasePipe(object):
     def read_some(self):
         """Read up some data from pipe. Function blocks until at least a byte of data is available.
 
-        :return: data read from pipe.
+        :return: byte string read from pipe.
         """
         return self.read()
 
@@ -127,7 +123,7 @@ class BasePipe(object):
 
         :param byte: (optional) size of data in bytes to read.
         :type byte: int
-        :return: data read from pipe.
+        :return: byte string read from pipe.
         """
         logged = 0
         while len(self._buffer_out) < count:
@@ -144,19 +140,19 @@ class BasePipe(object):
 
         :param line: (optional) lines to read.
         :type line: int
-        :return: data read from pipe including ``\\n``.
+        :return: byte string read from pipe including ``\\n``.
         """
-        data = ""
-        for i in xrange(line):
-            data += self.read_until("\n")
+        data = b""
+        for i in range(line):
+            data += self.read_until(b"\n")
         return data
 
     @not_closed
     def write(self, data):
         """Write ``buf`` to pipe.
 
-        :param buf: data to be written.
-        :type buf: str
+        :param buf: byte string to be written.
+        :type buf: bytes
         """
         self._buffer_in += data
         self._flush()
@@ -166,10 +162,10 @@ class BasePipe(object):
     def write_line(self, data):
         """Write ``data`` with ``\\n`` to pipe.
 
-        :param data: data to be written.
-        :type data: str
+        :param data: byte string to be written.
+        :type data: bytes
         """
-        self.write(data + "\n")
+        self.write(data + b"\n")
 
     @not_closed
     def interact(self, stdin=STDIN, stdout=STDOUT):
@@ -192,26 +188,26 @@ class BasePipe(object):
                 wfds.append(stdout)
             rfds, wfds, _ = select.select(rfds, wfds, [])
             if stdin in rfds:
-                data = os.read(stdin, 4096).decode('latin1')
-                if data == "":
+                data = os.read(stdin, 4096)
+                if data == b"":
                     break
                 self._buffer_in += data
             if self._file_out in rfds:
-                data = os.read(self._file_out, 4096).decode('latin1')
-                if data == "":
+                data = os.read(self._file_out, 4096)
+                if data == b"":
                     break
                 self._buffer_out += data
             if stdout in wfds:
-                size = os.write(stdout, self._buffer_out.encode('latin1'))
+                size = os.write(stdout, self._buffer_out)
                 self._buffer_out = self._buffer_out[size:]
             if self._file_in in wfds:
-                size = os.write(self._file_in, self._buffer_in.encode('latin1'))
+                size = os.write(self._file_in, self._buffer_in)
                 self._buffer_in = self._buffer_in[size:]
 
         while self._buffer_out:
             _, wfds, _ = select.select([], [stdout], [])
             if stdout in wfds:
-                size = os.write(stdout, self._buffer_out.encode('latin1'))
+                size = os.write(stdout, self._buffer_out)
                 self._buffer_out = self._buffer_out[size:]
 
         os.close(stdin)
